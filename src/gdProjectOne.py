@@ -4,7 +4,7 @@ import fastparquet
 import pandavro as pdx
 
 # store file path in a variable
-csvdata_filepath = '/media/gifty_dovie/New Volume/Documents/baP/source/data/companies_sorted.csv'
+csvdata_filepath = '/data/companies_sorted.csv'
 
 # store dataframe
 readcsvdata = pd.read_csv(csvdata_filepath, delimiter = ',')
