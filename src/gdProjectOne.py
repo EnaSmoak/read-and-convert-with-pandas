@@ -19,11 +19,11 @@ filtered_output = readcsvdata[readcsvdata.domain.notnull()]
 filtered_output
 
 # convert to json format and store dataframe
-output_jsonformat = filtered_output.to_json('companies_sorted.json')
+output_jsonformat = filtered_output.to_json('/data/companies_sorted.json')
 
 # convert to parquet format and store dataframe
-output_parquetformat = filtered_output.to_parquet('companies_sorted.parquet.gzip', compression='gzip')
+output_parquetformat = filtered_output.to_parquet('/data/companies_sorted.parquet.gzip', compression='gzip')
 
 # convert to avro format and strore dataframe
-output_avroformat = pdx.to_avro('companies_sorted.avro', filtered_output)
+output_avroformat = pdx.to_avro('/data/companies_sorted.avro', filtered_output)
 
