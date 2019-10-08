@@ -1,29 +1,50 @@
+import boto3
 import numpy as np
 import pandas as pd
 import fastparquet
 import pandavro as pdx
 
-# store file path in a variable
-csvdata_filepath = '/data/companies_sorted.csv'
+def main():
 
-# store dataframe
-readcsvdata = pd.read_csv(csvdata_filepath, delimiter = ',')
+	region = "eu-west-1"
+	
+	# initialized s3 resource
+	s3_client = boto3.client('s3', region_name=region)
+	 
+	# location constraint for s3 bucket
+	location = {'LocationConstraint': region}
+	
+	bucket = "blossom-data-eng-gifty-dovie"
+  s3_client.create_bucket(Bucket=bucket, CreateBucketConfiguration=location)
 
-# print dataframe
-readcsvdata
+  # download file to local filesystem
+  s3_client.download_file(bucket, "data.csv", '../data/companies_sorted.csv')
+	
+	# store file path in a variable
+	csvdata_filepath = "../data/companies_sorted.csv"
 
-# store filtered (companies domain name) dataframe
-filtered_output = readcsvdata[readcsvdata.domain.notnull()]
+	# store dataframe
+	readcsvdata = pd.read_csv(csvdata_filepath, delimiter = ",")
 
-# print dataframe
-filtered_output
+	# print dataframe
+	print(readcsvdata)
 
-# convert to json format and store dataframe
-output_jsonformat = filtered_output.to_json('/data/companies_sorted.json')
+	# store filtered (companies domain name) dataframe
+	filtered_output = readcsvdata[pd.notnull(readcsvdata.domain)]
 
-# convert to parquet format and store dataframe
-output_parquetformat = filtered_output.to_parquet('/data/companies_sorted.parquet.gzip', compression='gzip')
+	# print dataframe
+	filtered_output
 
-# convert to avro format and strore dataframe
-output_avroformat = pdx.to_avro('/data/companies_sorted.avro', filtered_output)
+	# convert to json format and store dataframe
+	output_jsonformat = filtered_output.to_json("../data/companies_sorted.json")
 
+	# convert to parquet format and store dataframe
+	output_parquetformat = filtered_output.to_parquet("../data/companies_sorted.parquet.gzip", compression="gzip")
+	
+	# upload files to the new bucket
+	s3_client.upload_file("../data/companies_sorted.csv", bucket, "companies_sorted.csv")
+	s3_client.upload_file("../data/companies_sorted.json", bucket, "companies_sorted.json")
+	s3_client.upload_file("../data/companies_sorted.parquet.gzip", bucket, "companies_sorted.parquet.gzip")
+    
+if __name__ == "__main__":
+    main()
