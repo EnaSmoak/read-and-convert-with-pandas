@@ -2,7 +2,7 @@ import boto3
 import numpy as np
 import pandas as pd
 import fastparquet
-import pandavro as pdx
+#import pandavro as pdx
 
 def main():
 
@@ -41,10 +41,14 @@ def main():
 	# convert to parquet format and store dataframe
 	output_parquetformat = filtered_output.to_parquet("../data/companies_sorted.parquet.gzip", compression="gzip")
 	
+	# convert to avro format and strore dataframe
+	# output_avroformat = pdx.to_avro("../data/companies_sorted.avro", filtered_output)
+	
 	# upload files to the new bucket
 	s3_client.upload_file("../data/companies_sorted.csv", bucket, "companies_sorted.csv")
 	s3_client.upload_file("../data/companies_sorted.json", bucket, "companies_sorted.json")
 	s3_client.upload_file("../data/companies_sorted.parquet.gzip", bucket, "companies_sorted.parquet.gzip")
+	# s3_client.upload_file("../data/companies_sorted.avro", bucket, "companies_sorted.avro")
     
 if __name__ == "__main__":
     main()
