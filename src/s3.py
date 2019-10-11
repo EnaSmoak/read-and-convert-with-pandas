@@ -15,10 +15,10 @@ def main():
     location = {'LocationConstraint': region}
 
     bucket = "blossom-data-eng-gifty-dovie"
-    # s3_client.create_bucket(Bucket=bucket, CreateBucketConfiguration=location)
+    s3_client.create_bucket(Bucket=bucket, CreateBucketConfiguration=location)
 
     # download file to local filesystem
-    # s3_client.download_file(bucket, "data.csv", '../data/companies_sorted.csv')
+    s3_client.download_file(bucket, "data.csv", '../data/companies_sorted.csv')
 
     # store file path in a variable
     csvdata_filepath = "../data/companies_sorted.csv"
